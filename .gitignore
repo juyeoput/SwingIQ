@@ -1,0 +1,29 @@
+# API 키
+.streamlit/secrets.toml
+.env
+
+# 영상 파일
+*.mp4
+*.mov
+*.avi
+*.MP4
+*.MOV
+*.AVI
+
+# 개인 데이터
+swing_data.json
+swing_analysis.png
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Mac
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Anaconda
+*.egg-info/
