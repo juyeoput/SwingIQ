@@ -68,7 +68,7 @@ def extract_metrics(lm, prev_nose_x=None, batting="우타"):
     }
 
 
-def analyze_video(video_path):
+def analyze_video(video_path, batting="우타"):
     """영상 전체 분석 후 지표 딕셔너리 반환"""
     hip_angles, shoulder_angles, gap_angles = [], [], []
     head_stability, elbow_distances, knee_angles, wrist_y_positions = [], [], [], []
@@ -83,8 +83,7 @@ def analyze_video(video_path):
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             results = pose.process(rgb_frame)
             if results.pose_landmarks:
-                metrics = extract_metrics(results.pose_landmarks.landmark, prev_nose_x)
-                #prev_nose_x굳이 사용하는 이유, extract_metrics에서 이미 head_move 구했지 않았나 
+                metrics = extract_metrics(results.pose_landmarks.landmark, prev_nose_x, batting=batting)
                 prev_nose_x = metrics["nose_x"]
                 hip_angles.append(metrics["hip_angle"])
                 shoulder_angles.append(metrics["shoulder_angle"])

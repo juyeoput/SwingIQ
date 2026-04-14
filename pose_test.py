@@ -9,6 +9,7 @@ mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
 
 VIDEO_PATH = "choo_swing.mp4"
+BATTING = "우타"
 
 
 def draw_overlay(frame, metrics):
@@ -44,7 +45,7 @@ def process_frame(frame, pose, prev_nose_x=None):
     metrics = None
     if results.pose_landmarks:
         mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-        metrics = extract_metrics(results.pose_landmarks.landmark, prev_nose_x, batting="좌타")
+        metrics = extract_metrics(results.pose_landmarks.landmark, prev_nose_x, batting=BATTING)
         frame = draw_overlay(frame, metrics)
     return frame, metrics
 
@@ -172,7 +173,7 @@ plt.show()
 print("그래프 저장됨 → swing_analysis.png")
 
 try:
-    data = analyze_video(VIDEO_PATH)
+    data = analyze_video(VIDEO_PATH, batting=BATTING)
     if data:
         save_data = {k: v for k, v in data.items()
                      if k not in ["hip_angles", "shoulder_angles", "gap_angles",
