@@ -7,7 +7,7 @@ mp_drawing = mp.solutions.drawing_utils
 
 
 def calculate_angle(a, b, c):
-    """세 관절 좌표로 각도 계산 (도 단위)"""
+    """아크탄 관절 각도 계산, 세 관절 좌표로 각도 계산 (도 단위)"""
     a = np.array([a.x, a.y])
     b = np.array([b.x, b.y])
     c = np.array([c.x, c.y])
@@ -20,11 +20,11 @@ def calculate_angle(a, b, c):
 
 
 def calculate_distance(a, b):
-    """두 관절 사이 거리 계산"""
+    """피타고리안으로 두 관절 사이 거리 계산"""
     return round(np.sqrt((a.x - b.x)**2 + (a.y - b.y)**2), 4)
 
 
-def extract_metrics(lm, prev_nose_x=None):
+def extract_metrics(lm, prev_nose_x=None, batting="우타"):
     """랜드마크에서 스윙 지표 추출"""
     left_shoulder  = lm[mp_pose.PoseLandmark.LEFT_SHOULDER]
     left_hip       = lm[mp_pose.PoseLandmark.LEFT_HIP]
@@ -43,6 +43,15 @@ def extract_metrics(lm, prev_nose_x=None):
     knee_angle     = calculate_angle(right_hip, right_knee, right_ankle)
     head_move      = abs(nose.x - prev_nose_x) if prev_nose_x is not None else 0.0
 
+    if batting == "우타":
+        hip_rotation_z      = round(lm[mp_pose.PoseLandmark.RIGHT_HIP].z - lm[mp_pose.PoseLandmark.LEFT_HIP].z, 4)
+        shoulder_rotation_z = round(lm[mp_pose.PoseLandmark.RIGHT_SHOULDER].z - lm[mp_pose.PoseLandmark.LEFT_SHOULDER].z, 4)
+    else:
+        hip_rotation_z      = round(lm[mp_pose.PoseLandmark.LEFT_HIP].z - lm[mp_pose.PoseLandmark.RIGHT_HIP].z, 4)
+        shoulder_rotation_z = round(lm[mp_pose.PoseLandmark.LEFT_SHOULDER].z - lm[mp_pose.PoseLandmark.RIGHT_SHOULDER].z, 4)
+
+    separation_z = round(hip_rotation_z - shoulder_rotation_z, 4)
+
     return {
         "hip_angle":      hip_angle,
         "shoulder_angle": shoulder_angle,
@@ -52,6 +61,10 @@ def extract_metrics(lm, prev_nose_x=None):
         "knee_angle":     knee_angle,
         "wrist_y":        round(right_wrist.y, 4),
         "nose_x":         nose.x,
+        # Z값으로 힙/어깨 회전 추정
+        "hip_rotation_z":      hip_rotation_z,
+        "shoulder_rotation_z":      shoulder_rotation_z,
+        "separation_z":      separation_z
     }
 
 
@@ -71,6 +84,7 @@ def analyze_video(video_path):
             results = pose.process(rgb_frame)
             if results.pose_landmarks:
                 metrics = extract_metrics(results.pose_landmarks.landmark, prev_nose_x)
+                #prev_nose_x굳이 사용하는 이유, extract_metrics에서 이미 head_move 구했지 않았나 
                 prev_nose_x = metrics["nose_x"]
                 hip_angles.append(metrics["hip_angle"])
                 shoulder_angles.append(metrics["shoulder_angle"])

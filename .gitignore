@@ -13,6 +13,7 @@
 # 개인 데이터
 swing_data.json
 swing_analysis.png
+swing_z_analysis.png
 
 # Python
 __pycache__/

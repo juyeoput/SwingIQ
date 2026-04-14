@@ -71,6 +71,7 @@ with col2:
     flexibility = st.selectbox("유연성", ["낮음", "보통", "높음"])
 
 st.header("스윙 영상 업로드")
+st.info("💡 스윙 한 번만 포함된 영상을 올려주세요. 준비 루틴 없이 스윙 동작만 찍으면 분석이 더 정확해요.")
 uploaded_file = st.file_uploader("MP4 파일을 업로드하세요", type=["mp4"])
 
 if uploaded_file and name:
@@ -96,11 +97,12 @@ if uploaded_file and name:
             frames = list(range(data["total_frames"]))
             fig, axes = plt.subplots(3, 2, figsize=(14, 12))
 
-            axes[0,0].plot(frames, data["hip_angles"], color='green', label='Hip', linewidth=1.5)
-            axes[0,0].plot(frames, data["shoulder_angles"], color='orange', label='Shoulder', linewidth=1.5)
+            axes[0,0].plot(frames, data["hip_angles"], color='green', label='Hip Angle', linewidth=1.5)
+            axes[0,0].plot(frames, data["shoulder_angles"], color='orange', label='Shoulder Angle', linewidth=1.5)
             axes[0,0].axhline(y=140, color='red', linestyle='--', alpha=0.5)
             axes[0,0].set_title('Hip & Shoulder Rotation')
-            axes[0,0].legend(); axes[0,0].grid(True, alpha=0.3)
+            axes[0,0].legend()
+            axes[0,0].grid(True, alpha=0.3)
 
             axes[0,1].plot(frames, data["gap_angles"], color='blue', linewidth=1.5)
             axes[0,1].axhline(y=0, color='black', alpha=0.3)
@@ -110,17 +112,20 @@ if uploaded_file and name:
             axes[0,1].fill_between(frames, data["gap_angles"], 0,
                 where=[g < 0 for g in data["gap_angles"]], alpha=0.2, color='red', label='Shoulder leading')
             axes[0,1].set_title('Kinetic Chain Gap')
-            axes[0,1].legend(); axes[0,1].grid(True, alpha=0.3)
+            axes[0,1].legend()
+            axes[0,1].grid(True, alpha=0.3)
 
             axes[1,0].plot(frames, data["head_stability"], color='purple', linewidth=1.5)
             axes[1,0].axhline(y=0.02, color='red', linestyle='--', alpha=0.5, label='Unstable threshold')
             axes[1,0].set_title('Head Stability (lower = better)')
-            axes[1,0].legend(); axes[1,0].grid(True, alpha=0.3)
+            axes[1,0].legend()
+            axes[1,0].grid(True, alpha=0.3)
 
             axes[1,1].plot(frames, data["elbow_distances"], color='brown', linewidth=1.5)
             axes[1,1].axhline(y=0.15, color='red', linestyle='--', alpha=0.5, label='Threshold')
             axes[1,1].set_title('Rear Elbow Distance (lower = better)')
-            axes[1,1].legend(); axes[1,1].grid(True, alpha=0.3)
+            axes[1,1].legend()
+            axes[1,1].grid(True, alpha=0.3)
 
             axes[2,0].plot(frames, data["knee_angles"], color='teal', linewidth=1.5)
             axes[2,0].set_title('Rear Knee Angle')

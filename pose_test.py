@@ -8,7 +8,7 @@ from utils import analyze_video, extract_metrics, calculate_distance
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
 
-VIDEO_PATH = "video1.mp4"
+VIDEO_PATH = "choo_swing.mp4"
 
 
 def draw_overlay(frame, metrics):
@@ -18,13 +18,15 @@ def draw_overlay(frame, metrics):
     cv2.addWeighted(overlay, 0.45, frame, 0.55, 0, frame)
 
     items = [
-        ("힙 회전",    f"{metrics['hip_angle']}°",      metrics['hip_angle'] > 100),
-        ("어깨 회전",  f"{metrics['shoulder_angle']}°",  True),
-        ("상하체 분리", f"{metrics['gap']}°",            metrics['gap'] > 0),
-        ("헤드 고정",  f"{metrics['head_move']:.4f}",    metrics['head_move'] < 0.02),
-        ("팔꿈치 거리", f"{metrics['elbow_dist']:.3f}",  metrics['elbow_dist'] < 0.15),
-        ("무릎 각도",  f"{metrics['knee_angle']}°",      True),
-        ("손목 Y",    f"{metrics['wrist_y']:.3f}",       True),
+        ("Hip",      f"{metrics['hip_angle']}°",      metrics['hip_angle'] > 100),
+        ("Shoulder", f"{metrics['shoulder_angle']}°",  True),
+        ("Gap",      f"{metrics['gap']}°",             metrics['gap'] > 0),
+        ("Head",     f"{metrics['head_move']:.4f}",    metrics['head_move'] < 0.02),
+        ("Elbow",    f"{metrics['elbow_dist']:.3f}",   metrics['elbow_dist'] < 0.15),
+        ("Knee",     f"{metrics['knee_angle']}°",      True),
+        ("Wrist Y",  f"{metrics['wrist_y']:.3f}",      True),
+        ("Hip Z",   f"{metrics['hip_rotation_z']:.4f}",   True),
+        ("Sep Z",   f"{metrics['separation_z']:.4f}",      True),
     ]
 
     for i, (label, value, is_good) in enumerate(items):
@@ -42,7 +44,7 @@ def process_frame(frame, pose, prev_nose_x=None):
     metrics = None
     if results.pose_landmarks:
         mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-        metrics = extract_metrics(results.pose_landmarks.landmark, prev_nose_x)
+        metrics = extract_metrics(results.pose_landmarks.landmark, prev_nose_x, batting="좌타")
         frame = draw_overlay(frame, metrics)
     return frame, metrics
 
@@ -62,6 +64,9 @@ prev_nose_x = None
 hip_angles, shoulder_angles, gap_angles = [], [], []
 head_stability, elbow_distances, knee_angles, wrist_y_positions = [], [], [], []
 
+hip_rotation_z_list = []
+separation_z_list = []
+
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
 
     while cap.isOpened():
@@ -80,6 +85,9 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             knee_angles.append(metrics["knee_angle"])
             wrist_y_positions.append(metrics["wrist_y"])
 
+            hip_rotation_z_list.append(metrics["hip_rotation_z"])
+            separation_z_list.append(metrics["separation_z"])
+
         cv2.imshow("SwingIQ — 실시간 분석", frame)
         key = cv2.waitKey(1) & 0xFF
 
@@ -95,11 +103,11 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                     cap.release()
                     cv2.destroyAllWindows()
                     exit()
-                elif key2 in (ord('d'), ord('a')):
+                elif key2 in (2, 3):
                     current = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
-                    if key2 == ord('d'):
+                    if key2 == 3:
                         cap.set(cv2.CAP_PROP_POS_FRAMES, min(current + 5, total_frames - 1))
-                    else:
+                    elif key2 == 2:
                         cap.set(cv2.CAP_PROP_POS_FRAMES, max(current - 6, 0))
                     ret2, frame2 = cap.read()
                     if ret2 and frame2 is not None:
@@ -150,8 +158,16 @@ axes[2,1].set_title('Wrist Y Position (bat head drop)')
 axes[2,1].invert_yaxis()
 axes[2,1].grid(True, alpha=0.3)
 
+
+fig2, ax = plt.subplots(1, 1, figsize=(14, 4))
+ax.plot(frames, hip_rotation_z_list, color='navy', label='Hip Z', linewidth=1.5)
+ax.plot(frames, separation_z_list, color='crimson', label='Separation Z', linewidth=1.5)
+ax.axhline(y=0, color='black', alpha=0.3)
+ax.set_title('Hip & Separation Z (depth)')
+ax.legend()
+ax.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('swing_analysis.png', dpi=150)
+plt.savefig('swing_z_analysis.png', dpi=150)
 plt.show()
 print("그래프 저장됨 → swing_analysis.png")
 
