@@ -7,14 +7,14 @@ Claude AI가 선수 개인 맞춤형 코칭 피드백을 제공합니다.
 ## 스크린샷
 
 ### 선수 정보 입력 & 영상 업로드
-<img width="1079" height="1084" alt="Screenshot 2026-04-14 at 2 52 03 AM" src="https://github.com/user-attachments/assets/50da3e63-fb0f-4b90-b041-98bdd976600f" />
+<img width="993" height="1014" alt="Screenshot 2026-04-14 at 3 35 25 AM" src="https://github.com/user-attachments/assets/a34157b8-dece-4ed8-87c0-9d91d67feefe" />
 <img width="1077" height="1057" alt="Screenshot 2026-04-14 at 3 07 24 AM" src="https://github.com/user-attachments/assets/6f9f3077-89ba-40d5-970d-ad1660634cae" />
 
 ### 스윙 분석 결과
 <img width="1075" height="1219" alt="Screenshot 2026-04-14 at 3 09 08 AM" src="https://github.com/user-attachments/assets/0cb0af21-2de3-449f-99fd-197139fe3248" />
 
 ### AI 코칭 피드백
-<img width="1072" height="1583" alt="Screenshot 2026-04-14 at 3 18 23 AM" src="https://github.com/user-attachments/assets/877cb8d8-30e2-4e2c-8a4c-af1c7de6fec8" />
+<img width="616" height="912" alt="Screenshot 2026-04-14 at 3 36 09 AM" src="https://github.com/user-attachments/assets/ddc8f40e-7ca7-47e0-9b31-8f155f0fcf65" />
 
 ## 시스템 구조
 
