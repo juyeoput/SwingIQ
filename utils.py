@@ -7,7 +7,6 @@ import mediapipe as mp
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
 
-
 def calculate_angle(a, b, c):
     """아크탄 관절 각도 계산, 세 관절 좌표로 각도 계산 (도 단위)"""
     a = np.array([a.x, a.y])
