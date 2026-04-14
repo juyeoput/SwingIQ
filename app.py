@@ -44,9 +44,9 @@ def get_ai_feedback(data, profile):
 1. 전체 평가 (2-3문장)
 2. 잘하고 있는 점
 3. 개선이 필요한 점
-4. 이 선수에게 맞는 구체적인 훈련 방법 (1-2가지)
+4. 이 선수에게 맞는 구체적인 훈련 방법 (1가지만)
 
-코치가 선수에게 직접 말하는 톤으로 작성해주세요.
+코치가 선수에게 직접 말하는 톤으로 각 항목 2-3줄 이내로 간결하게 작성해주세요.
 """
     message = client.messages.create(
         model="claude-sonnet-4-6",
@@ -82,7 +82,7 @@ if uploaded_file and name:
             tmp_path = tmp.name
 
         with st.spinner("영상 분석 중..."):
-            data = analyze_video(tmp_path)
+            data = analyze_video(tmp_path, batting=batting)
         os.unlink(tmp_path)
 
         if not data:
