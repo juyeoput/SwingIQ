@@ -4,13 +4,30 @@
 스마트폰으로 촬영한 타격 영상을 업로드하면 MediaPipe로 관절을 추출하고,
 Claude AI가 선수 개인 맞춤형 코칭 피드백을 제공합니다.
 
-## 주요 기능
-- 힙/어깨 회전각도 분석
-- Kinetic Chain Gap (상하체 분리) 측정
-- 머리 고정 여부 감지
-- 뒷팔꿈치 위치 분석
-- 뒷무릎 각도 분석
-- Claude API 기반 개인화 AI 피드백
+## 스크린샷
+
+### 선수 정보 입력 & 영상 업로드
+<img width="1079" height="1084" alt="Screenshot 2026-04-14 at 2 52 03 AM" src="https://github.com/user-attachments/assets/50da3e63-fb0f-4b90-b041-98bdd976600f" />
+<img width="1077" height="1057" alt="Screenshot 2026-04-14 at 3 07 24 AM" src="https://github.com/user-attachments/assets/6f9f3077-89ba-40d5-970d-ad1660634cae" />
+
+### 스윙 분석 결과
+<img width="1075" height="1219" alt="Screenshot 2026-04-14 at 3 09 08 AM" src="https://github.com/user-attachments/assets/0cb0af21-2de3-449f-99fd-197139fe3248" />
+
+### AI 코칭 피드백
+<img width="1072" height="1583" alt="Screenshot 2026-04-14 at 3 18 23 AM" src="https://github.com/user-attachments/assets/877cb8d8-30e2-4e2c-8a4c-af1c7de6fec8" />
+
+## 시스템 구조
+
+영상 업로드 → MediaPipe (관절 추출) → utils.py (7개 지표 계산) → Claude API (AI 피드백) → Streamlit (웹 UI)
+
+## 분석 지표
+- 힙/어깨 회전각도
+- Kinetic Chain Gap (상하체 분리)
+- 머리 고정 여부
+- 뒷팔꿈치 위치
+- 뒷무릎 각도
+- Z값 기반 힙 회전 (depth 추정)
+- 좌타/우타 자동 분기 처리
 
 ## 기술 스택
 - Python 3.10
@@ -31,8 +48,11 @@ streamlit run app.py
 ANTHROPIC_API_KEY = "your-api-key"
 ```
 
+## 개발 기간
+2026년 2월 ~ 진행 중
+
 ## 로드맵
 - Phase 1: 타격폼 분석 고도화 + KBSA 성적 연동
 - Phase 2: 인바디 데이터 연동, 스윙 히스토리 트래킹
-- Phase 3: 모바일 앱, Back View 분석
-- Phase 4: 임베디드 센서 연동
+- Phase 3: 모바일 앱, Back View 분석, FastAPI 전환
+- Phase 4: Spring Boot 연동, 임베디드 센서 연동
