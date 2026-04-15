@@ -4,6 +4,5 @@ numpy
 matplotlib
 anthropic
 python-dotenv
-Scikscikit-learn
-joblibit-learn
+scikit-learn
 joblib
