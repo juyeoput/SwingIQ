@@ -131,7 +131,7 @@ def extract_from_video(video_path, player_name, batting="우타", label=None):
     csv_path = "swing_dataset.csv"
     file_exists = os.path.isfile(csv_path)
 
-    with open(csv_path, "a", newline="") as f:
+    with open(csv_path, "a", newline="", encoding='utf-8-sig') as f:
         writer = csv.DictWriter(f, fieldnames=row.keys())
         if not file_exists:
             writer.writeheader()

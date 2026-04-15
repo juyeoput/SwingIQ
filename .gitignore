@@ -31,3 +31,6 @@ __pycache__/
 
 # Anaconda
 *.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
