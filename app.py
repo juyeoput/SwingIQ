@@ -4,11 +4,13 @@ import anthropic
 import json
 import tempfile
 import os
+import joblib
+
+model = joblib.load("swing_model.pkl")
 
 from utils import analyze_video
 
-
-def get_ai_feedback(data, profile):
+def get_ai_feedback(data, profile, swing_score):
     client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
     prompt = f"""
 당신은 전문 야구 타격 코치입니다.
@@ -21,6 +23,13 @@ def get_ai_feedback(data, profile):
 - 경력: {profile['experience']}년
 - 주타: {profile['batting']}
 - 유연성: {profile['flexibility']}
+
+[AI 스윙 점수]
+- 종합 점수: {swing_score}점 / 100점
+  (100점에 가까울수록 기본기가 잘 잡힌 스윙)
+- Feature importance
+  (avg_head_move, max_shoulder, avg_elbow_dist, min_gap,
+   avg_wrist_y, avg_gap, avg_hip, max_gap, max_hip, avg_hip_z, avg_knee_angle 순)
 
 [스윙 데이터]
 - 힙 최대 회전각도: {data['hip']['max']}도
@@ -39,7 +48,8 @@ def get_ai_feedback(data, profile):
 - 머리 움직임 0.02 이하: 안정적
 - 팔꿈치 거리 0.15 이하: 이상적인 폼
 
-선수 프로필을 반드시 고려해서 개인화된 피드백을 작성해주세요.
+선수 프로필을 반드시!!! 고려해서 개인화된 피드백을 작성해주세요.
+수치 위주의 답변은 이해하기 어려우니, 야구 입문자 입장에서 이해하기 쉽게 작성해주세요.
 
 1. 전체 평가 (2-3문장)
 2. 잘하고 있는 점
@@ -145,9 +155,19 @@ if uploaded_file and name:
             col3.metric("평균 Gap", f"{data['kinetic_chain']['avg_gap']}°")
             col4.metric("불안정 프레임", f"{data['head']['unstable_frames']}")
 
+            #모델 점수 계산
+            X_input = [[data['hip']['max'], data['hip']['avg'], data['shoulder']['max'],
+                        data['kinetic_chain']['max_gap'], data['kinetic_chain']['min_gap'],
+                        data['kinetic_chain']['avg_gap'], data['head']['avg_movement'],
+                        data['elbow']['avg_distance'], data['knee']['avg_angle'],
+                        data['bat_head']['avg_wrist_y'], data['hip_z']['avg']]]
+            
+            #좋은 스윙일 확률
+            swing_score = round(model.predict_proba(X_input)[0][1] * 100, 1)
+
             st.header("🤖 AI 코칭 피드백")
             with st.spinner("AI 피드백 생성 중..."):
-                feedback = get_ai_feedback(data, profile)
+                feedback = get_ai_feedback(data, profile, swing_score)
             st.markdown(feedback)
 
             with open("swing_data.json", "w") as f:

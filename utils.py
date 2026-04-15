@@ -71,6 +71,7 @@ def analyze_video(video_path, batting="우타"):
     """영상 전체 분석 후 지표 딕셔너리 반환"""
     hip_angles, shoulder_angles, gap_angles = [], [], []
     head_stability, elbow_distances, knee_angles, wrist_y_positions = [], [], [], []
+    hip_z_list = []
     prev_nose_x = None
 
     cap = cv2.VideoCapture(video_path)
@@ -91,6 +92,8 @@ def analyze_video(video_path, batting="우타"):
                 elbow_distances.append(metrics["elbow_dist"])
                 knee_angles.append(metrics["knee_angle"])
                 wrist_y_positions.append(metrics["wrist_y"])
+                hip_z_list.append(metrics["hip_rotation_z"])
+
     cap.release()
 
     if not hip_angles:
@@ -134,5 +137,8 @@ def analyze_video(video_path, batting="우타"):
         "bat_head": {
             "avg_wrist_y": round(sum(wrist_y_positions) / len(wrist_y_positions), 4),
             "max_drop":    round(max(wrist_y_positions), 4)
+        },
+        "hip_z": {
+            "avg": round(sum(hip_z_list) / len(hip_z_list), 4)
         }
     }
