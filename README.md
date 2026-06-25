@@ -1,4 +1,4 @@
-[한국어](README.md) | English
+[한국어](README_KO.md) | English
 
 # SwingIQ ⚾
 > AI-Powered Baseball Swing Analysis Service
@@ -9,11 +9,9 @@ Most existing swing analysis apps provide only surface-level feedback like "insu
 
 Designed by a developer who played elite baseball from elementary school through high school, SwingIQ combines a custom biomechanics-based analysis engine with Claude AI to deliver coach-level feedback.
 
-The long-term goal is to strengthen competitive baseball in Korea — from amateur players to national team athletes.
-
 ## Vision
 - Personalized AI coaching for amateur and recreational players
-- Linking KBSA performance data with swing mechanics
+- Linking individual performance data with swing mechanics
 - Combining embedded sensor data with video analysis
 - Expansion to all positions and a national-team-level data platform
 
