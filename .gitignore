@@ -34,3 +34,6 @@ __pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# players' dataset
+data/swing_dataset.csv

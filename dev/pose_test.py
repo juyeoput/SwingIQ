@@ -3,6 +3,9 @@ import mediapipe as mp
 import matplotlib.pyplot as plt
 import json
 
+from sys import path
+path.append("..") # temporary
+
 from utils import analyze_video, extract_metrics, calculate_distance
 
 mp_pose = mp.solutions.pose

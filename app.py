@@ -6,7 +6,7 @@ import tempfile
 import os
 import joblib
 
-model = joblib.load("swing_model.pkl")
+model = joblib.load("models/swing_model.pkl")
 
 from utils import analyze_video
 

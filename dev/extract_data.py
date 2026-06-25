@@ -128,7 +128,7 @@ def extract_from_video(video_path, player_name, batting="우타", label=None):
         "total_frames":   len(all_frames),
     }
 
-    csv_path = "swing_dataset.csv"
+    csv_path = "../data/swing_dataset.csv"
     file_exists = os.path.isfile(csv_path)
 
     with open(csv_path, "a", newline="", encoding='utf-8-sig') as f:
