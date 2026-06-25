@@ -1,4 +1,4 @@
-[English](README_EN.md) | 한국어
+[English](README.md) | 한국어
 # SwingIQ ⚾
 > AI 기반 야구 타격폼 분석 서비스
 
